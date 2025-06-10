@@ -1,40 +1,57 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import {
+  Pressable,
   StyleSheet,
   Text,
-  TouchableOpacity,
   useColorScheme,
   View
 } from 'react-native';
 
 export default function IndexScreen() {
   const router = useRouter();
-  const theme = useColorScheme() || 'light'; // Fallback to 'light' if null
+  const theme = useColorScheme() || 'light';
+
+  const handlePress = (path: string) => {
+    router.push(path as Parameters<typeof router.push>[0]);
+  };
 
   return (
     <LinearGradient
-      colors={theme === 'dark' ? ['#0f2027', '#203a43'] : ['#2193b0', '#6dd5ed']}
+      colors={
+        theme === 'dark'
+          ? ['#0f0c29', '#302b63', '#24243e']
+          : ['#89f7fe', '#66a6ff', '#4facfe']
+      }
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
       style={styles.container}
     >
       <View style={styles.content}>
-
         <Text style={styles.title}>Welcome to Socialify</Text>
         <Text style={styles.subtitle}>Your social media hub</Text>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => router.push('/(auth)/login')}
+        <Pressable
+          style={({ pressed }) => [
+            styles.button,
+            styles.loginButton,
+            pressed && styles.buttonPressed,
+          ]}
+          onPress={() => handlePress('/(auth)/login')}
         >
           <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
+        </Pressable>
 
-        <TouchableOpacity
-          style={[styles.button, styles.registerButton]}
-          onPress={() => router.push('/(auth)/register')}
+        <Pressable
+          style={({ pressed }) => [
+            styles.button,
+            styles.registerButton,
+            pressed && styles.buttonPressed,
+          ]}
+          onPress={() => handlePress('/(auth)/register')}
         >
           <Text style={styles.buttonText}>Register</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </LinearGradient>
   );
@@ -47,42 +64,57 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 24,
     alignItems: 'center',
-    gap: 20,
-  },
-  logo: {
-    width: 120,
-    height: 120,
-    marginBottom: 20,
+    paddingHorizontal: 24,
+    gap: 24,
   },
   title: {
-    fontSize: 32,
+    fontSize: 38,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#ffffff',
     textAlign: 'center',
+    marginBottom: 10,
+    textShadowColor: 'rgba(0,0,0,0.3)',
+    textShadowOffset: { width: 1, height: 2 },
+    textShadowRadius: 4,
   },
   subtitle: {
-    fontSize: 16,
-    color: '#eee',
-    marginBottom: 20,
+    fontSize: 18,
+    color: '#f0f0f0',
+    marginBottom: 32,
     textAlign: 'center',
+    opacity: 0.9,
   },
   button: {
-    backgroundColor: '#2ecc71',
     paddingVertical: 14,
     paddingHorizontal: 32,
-    borderRadius: 12,
+    borderRadius: 16,
     width: '100%',
     maxWidth: 300,
     alignItems: 'center',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.3)',
+    backdropFilter: 'blur(10px)', // works only in web, feel free to keep it or remove
+  },
+  loginButton: {
+    backgroundColor: 'rgba(46, 204, 113, 0.85)',
   },
   registerButton: {
-    backgroundColor: '#3498db',
+    backgroundColor: 'rgba(52, 152, 219, 0.85)',
+  },
+  buttonPressed: {
+    opacity: 0.85,
+    transform: [{ scale: 0.96 }],
   },
   buttonText: {
     color: '#fff',
-    fontWeight: '600',
-    fontSize: 16,
+    fontWeight: 'bold',
+    fontSize: 17,
+    letterSpacing: 0.8,
   },
 });
